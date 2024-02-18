@@ -1,0 +1,51 @@
+﻿using System.Collections.Generic;
+using MyProject.Sources.Enemies;
+using UnityEngine;
+
+namespace MyProject.Sources.Players
+{
+    public class EnemyLocator : MonoBehaviour
+    {
+        private List<EnemyHealth> _enemies = new List<EnemyHealth>();
+
+        public EnemyHealth GetClosestEnemy()
+        {
+            if (_enemies.Count == 0)
+            {
+                return null;
+            }
+
+            float minDistance = float.PositiveInfinity;
+            EnemyHealth closestEnemy = null;
+
+            foreach (var enemy in _enemies)
+            {
+                float distance = Vector2.Distance(transform.position, enemy.transform.position);
+
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                    closestEnemy = enemy;
+                }
+            }
+
+            return closestEnemy;
+        }
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other.TryGetComponent(out EnemyHealth enemyHealth))
+            {
+                _enemies.Add(enemyHealth);
+            }
+        }
+
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            if (other.TryGetComponent(out EnemyHealth enemyHealth))
+            {
+                _enemies.Remove(enemyHealth);
+            }
+        }
+    }
+}
