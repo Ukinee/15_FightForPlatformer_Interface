@@ -8,6 +8,22 @@ namespace MyProject.Sources.Players
     {
         private List<EnemyHealth> _enemies = new List<EnemyHealth>();
 
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other.TryGetComponent(out EnemyHealth enemyHealth))
+            {
+                _enemies.Add(enemyHealth);
+            }
+        }
+
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            if (other.TryGetComponent(out EnemyHealth enemyHealth))
+            {
+                _enemies.Remove(enemyHealth);
+            }
+        }
+        
         public EnemyHealth GetClosestEnemy()
         {
             if (_enemies.Count == 0)
@@ -31,21 +47,10 @@ namespace MyProject.Sources.Players
 
             return closestEnemy;
         }
-
-        private void OnTriggerEnter2D(Collider2D other)
+        
+        public bool Contains(EnemyHealth enemy)
         {
-            if (other.TryGetComponent(out EnemyHealth enemyHealth))
-            {
-                _enemies.Add(enemyHealth);
-            }
-        }
-
-        private void OnTriggerExit2D(Collider2D other)
-        {
-            if (other.TryGetComponent(out EnemyHealth enemyHealth))
-            {
-                _enemies.Remove(enemyHealth);
-            }
+            return _enemies.Contains(enemy);
         }
     }
 }
